@@ -72,6 +72,15 @@ void vLoggerTask(void *pvParameters) {
     }
 }
 
+void vSimulatorTask(void *pvParameters) {
+    vTaskDelay(pdMS_TO_TICKS(200));
+    while(1){
+        uint8_t frame[] = {0xAA, 0x07, 0xE8, 0x03, 0xAD, 0xDE, 0xEB, 0x00};
+        Serial2.write(frame, sizeof(frame)); 
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
 void myISR(){
     uint8_t byte;
     byte = Serial2.read();
@@ -105,6 +114,9 @@ void setup() {
     // Starts scheduling (will run as soon as scheduler gets control)
     // NULL - parameter to pass in and where to store the task handle
     // 1 - which core to run on
+
+    xTaskCreatePinnedToCore(vLoggerTask, "LoggerTask", 2048, NULL, 2, NULL, 1);
+    xTaskCreatePinnedToCore(vSimulatorTask, "SimulatorTask", 2048, NULL, 1, NULL, 1);
 }
 
 void loop() {
