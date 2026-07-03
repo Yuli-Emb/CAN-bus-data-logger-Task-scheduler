@@ -58,11 +58,11 @@ Press PlatformIO: Build, an arrow facing right in the bottom of your screen.
 
 ## Performance results
 
-At 500ms intervals - 0 drops, stable indefinitely
-
-At 10ms - 0 drops, stable
-
-At 1ms - queue saturates, drops occur - around ~5 received vs ~500 dropped per second
+| Interval | Frames/sec | Received | Dropped |
+|---|---|---|---|
+| 500ms | ~2 | All | 0 |
+| 10ms | ~100 | All | 0 |
+| 1ms | ~1000 | ~5/s | ~500/s |
 
 ## Known limitations
 
