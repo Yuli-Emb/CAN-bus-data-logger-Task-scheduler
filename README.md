@@ -84,7 +84,8 @@ Initial implementation read only one byte per callback causing hardware buffer t
 ## What I learned
 
 During my work on this projects I learned what CAN bus consists of and how to build code for one 
-Before I only knew theory, now I'm capable of building one myself
+
+Before I only knew theory, now I'm capable of building one myself :)
 
 I learned how to structure firmware around independent tasks that communicates through structures like semaphores and queues, rather than using single loop for everything
 
