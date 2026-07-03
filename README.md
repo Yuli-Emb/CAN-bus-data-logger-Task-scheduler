@@ -23,8 +23,9 @@ This project was created to gain practical knowledge on CAN bus basics. Were use
 -> Stats task prints out overall information including amount of received frames, dropped frames, overall queue depth and overrun.
 
 ## Components
-
-myISR — Interrupt Service Routine, drains Serial2 buffer into ring buffer, signals semaphore to wake reader task.
+| Component | Description |
+|---|---|
+|myISR | Interrupt Service Routine, drains Serial2 buffer into ring buffer, signals semaphore to wake reader task |
 
 ring_buffer — lock-free single-producer single-consumer byte buffer. Written by ISR, read by reader task
 
