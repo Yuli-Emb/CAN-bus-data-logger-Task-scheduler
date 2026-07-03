@@ -3,22 +3,24 @@
 #include "ring_buffer.h"
 #include "can_frame.h"
 
-SemaphoreHandle_t xSemaphore; // Declares semaphore
+// SemaphoreHandle_t xSemaphore; // Declares semaphore
 QueueHandle_t xQueue; // Holds reference to a queue. Declares a variable
 Ring_Buffer rb;
 
 volatile uint32_t frames_received = 0;
 volatile uint32_t frames_dropped = 0;
 
-void myISR(){
+/*void myISR(){
     uint8_t byte;
     byte = Serial2.read();
     rb_write(&rb, byte);
 
     BaseType_t higherPriorityWoken = pdFALSE;
     xSemaphoreGiveFromISR(xSemaphore, &higherPriorityWoken);
+    Serial2.onReceive(NULL);
+    Serial2.onReceive(myISR);
     portYIELD_FROM_ISR(higherPriorityWoken);
-}
+}*/
 
 void vReaderTask (void *pvParameters){ // reader task
     FrameState state = WAIT_SOF;
@@ -29,10 +31,10 @@ void vReaderTask (void *pvParameters){ // reader task
     vTaskDelay(pdMS_TO_TICKS(100));
     
     while (1){
-        Serial2.onReceive(myISR);
-        xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(50));
-        while (rb_available(&rb) != 0) {
-            rb_read(&rb, &byte);
+        // Serial2.onReceive(myISR);
+        // xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(50));
+        while (Serial2.available()) {
+            byte =  Serial2.read();
             switch(state){
                 case WAIT_SOF: // Waiting for 0xAA
                     if (byte == 0xAA){
@@ -75,6 +77,7 @@ void vReaderTask (void *pvParameters){ // reader task
                     break;
             }
         }
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
 }
 
@@ -89,6 +92,7 @@ void vLoggerTask(void *pvParameters) {
             Serial.printf("%02X ", frame.data[i]);
         }
         Serial.printf("\n");
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -97,7 +101,7 @@ void vSimulatorTask(void *pvParameters) {
     while(1){
         uint8_t frame[] = {0xAA, 0x07, 0xE8, 0x03, 0xAD, 0xDE, 0xEB, 0x00};
         Serial2.write(frame, sizeof(frame)); 
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
 
@@ -115,9 +119,9 @@ void setup() {
     
 
     Serial2.begin(115200); // 
-    Serial2.onReceive(myISR); // call this function when something happens
+    // Serial2.onReceive(myISR); // call this function when something happens
 
-    xSemaphore = xSemaphoreCreateBinary();
+    // xSemaphore = xSemaphoreCreateBinary();
 
     memset(&rb, 0, sizeof(Ring_Buffer));
 
