@@ -9,11 +9,17 @@ This project was created to gain practical knowledge on CAN bus basics. Were use
 ## Architecture overview
 
 -> Simulator task sends bytes using Serial2.write (TX -> RX)
+
 -> ISR fires, drains buffer into ring buffer
+
 -> Signals semaphore
+
 -> Reader task wakes up and assembles frames using switch-case structure, which saves data to it's designated variables
+
 -> Reader task sends frame to queue and resets variables
+
 -> Logger task prints out information about frame
+
 -> Stats task prints out overall information including amount of received frames, dropped frames, overall queue depth and overrun.
 
 Components
