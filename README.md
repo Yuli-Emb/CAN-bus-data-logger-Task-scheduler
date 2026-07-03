@@ -72,9 +72,12 @@ Microcontroller ESP32, it's GPIO 16 and 17 were connected to each other to simul
 ## Debugging
 
 ESP32 Arduino's Serial2.onReceive() isn't a true hardware ISR, but a software callback
+
 Initial implementation read only one byte per callback causing hardware buffer to fill up, which caused it to stop working after a few frames
-Fix: draining all available bytes inside the callback clears the hardware buffer completely, preventing stalls
-On direct UART interrupt registers (Like STM32 board has) this issue doesn't exist - the ISR fires per byte at the hardware level
+
+**Fix**: draining all available bytes inside the callback clears the hardware buffer completely, preventing stalls
+
+*P.S. On direct UART interrupt registers (Like STM32 board has) this issue doesn't exist - the ISR fires per byte at the hardware level*
 
 ---
 
