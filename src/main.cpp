@@ -77,34 +77,34 @@ void vReaderTask (void *pvParameters){ // reader task
     }
 }
 
-void vLoggerTask(void *pvParameters) {
+void vLoggerTask(void *pvParameters) { // Logs
     CAN_frame_t frame;
     while(1){
         xQueueReceive(xQueue, &frame, portMAX_DELAY);
-        Serial.print("\n>> Frame\n");
+        Serial.print("\n>> Frame\n"); // Output frame contents
         Serial.printf("[%lu ms] | ID:0x%03X | DLC:%d \n", xTaskGetTickCount(), frame.id, frame.dlc);
         Serial.printf("DATA: ");
         for (int i = 0; i < frame.dlc; i++) {
             Serial.printf("%02X ", frame.data[i]);
         }
         Serial.printf("\n");
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(100)); // deleay
     }
 }
 
-void vSimulatorTask(void *pvParameters) {
+void vSimulatorTask(void *pvParameters) { // Frame Simulation
     vTaskDelay(pdMS_TO_TICKS(200));
     while(1){
-        uint8_t frame[] = {0xAA, 0x07, 0xE8, 0x03, 0xAD, 0xDE, 0xEB, 0x00};
-        Serial2.write(frame, sizeof(frame)); 
-        vTaskDelay(pdMS_TO_TICKS(1));
+        uint8_t frame[] = {0xAA, 0x07, 0xE8, 0x03, 0xAD, 0xDE, 0xEB, 0x00}; // Create frame
+        Serial2.write(frame, sizeof(frame)); // Send
+        vTaskDelay(pdMS_TO_TICKS(100)); // Delay
     }
 }
 
-void vStatsTask(void *pvParameters) {
+void vStatsTask(void *pvParameters) { // Statistics
     vTaskDelay(pdMS_TO_TICKS(200));
     while(1){
-        Serial.printf("\n>> STATS\nReceived: %lu\nDropped: %lu\nQueue depth: %u\n", frames_received, frames_dropped, uxQueueMessagesWaiting(xQueue));
+        Serial.printf("\n>> STATS\nReceived: %lu\nDropped: %lu\nQueue depth: %u\n", frames_received, frames_dropped, uxQueueMessagesWaiting(xQueue)); // Outputs statistics
         Serial.printf("Overrun: %d\n", rb.overrun);
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
