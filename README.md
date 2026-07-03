@@ -22,6 +22,8 @@ This project was created to gain practical knowledge on CAN bus basics. Were use
 
 -> Stats task prints out overall information including amount of received frames, dropped frames, overall queue depth and overrun.
 
+---
+
 ## Components
 | Component | Description |
 |---|---|
@@ -33,9 +35,13 @@ This project was created to gain practical knowledge on CAN bus basics. Were use
 |vStatsTask | displays heath of the system: how many frames were received, dropped, total queue depth and overrun |
 |setup | regular setup function, creates tasks pinned to core, starts serial and serial2, sets memory |
 
+---
+
 ## Hardware
 
 Microcontroller ESP32, it's GPIO 16 and 17 were connected to each other to simulate UART data exchange.
+
+---
 
 ## How to build and flash
 
@@ -51,6 +57,8 @@ Microcontroller ESP32, it's GPIO 16 and 17 were connected to each other to simul
 
 6. Press PlatformIO: Build, an arrow facing right in the bottom of your screen.
 
+---
+
 ## Performance results
 
 | Interval | Frames/sec | Received | Dropped |
@@ -59,12 +67,16 @@ Microcontroller ESP32, it's GPIO 16 and 17 were connected to each other to simul
 | 10ms | ~100 | All | 0 |
 | 1ms | ~1000 | ~5/s | ~500/s |
 
-## Known limitations
+---
+
+## Debugging
 
 ESP32 Arduino's Serial2.onReceive() isn't a true hardware ISR, but a software callback
 Initial implementation read only one byte per callback causing hardware buffer to fill up, which caused it to stop working after a few frames
 Fix: draining all available bytes inside the callback clears the hardware buffer completely, preventing stalls
 On direct UART interrupt registers (Like STM32 board has) this issue doesn't exist - the ISR fires per byte at the hardware level
+
+---
 
 ## What I learned
 
