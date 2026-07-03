@@ -3,24 +3,22 @@
 #include "ring_buffer.h"
 #include "can_frame.h"
 
-// SemaphoreHandle_t xSemaphore; // Declares semaphore
+SemaphoreHandle_t xSemaphore; // Declares semaphore
 QueueHandle_t xQueue; // Holds reference to a queue. Declares a variable
 Ring_Buffer rb;
 
 volatile uint32_t frames_received = 0;
 volatile uint32_t frames_dropped = 0;
 
-/*void myISR(){
-    uint8_t byte;
-    byte = Serial2.read();
-    rb_write(&rb, byte);
-
+void myISR() {
+    while (Serial2.available()) {
+        uint8_t byte = Serial2.read();
+        rb_write(&rb, byte);
+    }
     BaseType_t higherPriorityWoken = pdFALSE;
     xSemaphoreGiveFromISR(xSemaphore, &higherPriorityWoken);
-    Serial2.onReceive(NULL);
-    Serial2.onReceive(myISR);
     portYIELD_FROM_ISR(higherPriorityWoken);
-}*/
+}
 
 void vReaderTask (void *pvParameters){ // reader task
     FrameState state = WAIT_SOF;
@@ -31,10 +29,9 @@ void vReaderTask (void *pvParameters){ // reader task
     vTaskDelay(pdMS_TO_TICKS(100));
     
     while (1){
-        // Serial2.onReceive(myISR);
-        // xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(50));
-        while (Serial2.available()) {
-            byte =  Serial2.read();
+        xSemaphoreTake(xSemaphore, portMAX_DELAY);
+        while (rb_available(&rb) != 0) {
+            rb_read(&rb, &byte);
             switch(state){
                 case WAIT_SOF: // Waiting for 0xAA
                     if (byte == 0xAA){
@@ -77,7 +74,6 @@ void vReaderTask (void *pvParameters){ // reader task
                     break;
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(5));
     }
 }
 
@@ -119,9 +115,9 @@ void setup() {
     
 
     Serial2.begin(115200); // 
-    // Serial2.onReceive(myISR); // call this function when something happens
+    Serial2.onReceive(myISR); // call this function when something happens
 
-    // xSemaphore = xSemaphoreCreateBinary();
+    xSemaphore = xSemaphoreCreateBinary();
 
     memset(&rb, 0, sizeof(Ring_Buffer));
 
