@@ -26,17 +26,11 @@ This project was created to gain practical knowledge on CAN bus basics. Were use
 | Component | Description |
 |---|---|
 |myISR | Interrupt Service Routine, drains Serial2 buffer into ring buffer, signals semaphore to wake reader task |
-
 |ring_buffer | lock-free single-producer single-consumer byte buffer. Written by ISR, read by reader task |
-
 |vReaderTask | main reader task, used for processing CAN frame step by step and saving data from them to variables |
-
 |vLoggerTask | used for logging, outputs time and contents of a frame such as ID, DLC and Data |
-
 |vSimulatorTask | simulates creation of data frame and sends it to Serial2 |
-
 |vStatsTask | displays heath of the system: how many frames were received, dropped, total queue depth and overrun |
-
 |setup | regular setup function, creates tasks pinned to core, starts serial and serial2, sets memory |
 
 ## Hardware
