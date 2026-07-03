@@ -39,17 +39,17 @@ Microcontroller ESP32, it's GPIO 16 and 17 were connected to each other to simul
 
 ## How to build and flash
 
-Create an empty project with ESP32 selected.
+1. Create an empty project with ESP32 selected.
 
-Upload or create main.cpp, can_frame.h, ring_buffer.cpp, ring_buffer.h
+2. Upload or create main.cpp, can_frame.h, ring_buffer.cpp, ring_buffer.h
 
-Make sure platformio.ini contains framework = arduino and board = esp32dev
+3. Make sure platformio.ini contains framework = arduino and board = esp32dev
 
-Connect GPIO 16 and 17 on your ESP32 with a wire
+4. Connect GPIO 16 and 17 on your ESP32 with a wire
 
-Connect ESP32 to your device
+5. Connect ESP32 to your device
 
-Press PlatformIO: Build, an arrow facing right in the bottom of your screen.
+6. Press PlatformIO: Build, an arrow facing right in the bottom of your screen.
 
 ## Performance results
 
